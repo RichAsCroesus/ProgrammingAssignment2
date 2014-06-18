@@ -9,8 +9,7 @@ makeCacheMatrix <- function(x = matrix()) {
     x <<- y
     m <<- NULL
   }
-  rows <- dim(x)[1]
-  cols <- dim(x)[2]
+  
   get <- function() x
   setinverse <- function(solve) m <<- solve
   getinverse <- function() m
@@ -33,11 +32,14 @@ cacheSolve <- function(x, ...) {
     return(m)
   }
   data <- x$get()
+  # if the matrix isn't square load the MASS package
+  # and use Moore-Penrose generalize inverse. 
   if ( dim(data)[1] != dim(data)[2])
   {
     library(MASS)
     m <- ginv(data, ...)
   }
+  # otherwise use solve 
   else
   {
     m <- solve(data, ...)
